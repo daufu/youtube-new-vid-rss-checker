@@ -1,1 +1,1 @@
-# youtube-new-vid-rss-checker
+# youtube new vid checker
