@@ -1,7 +1,7 @@
 import feedparser
 import json
-import datetime # 1. 只引入整個 datetime 模組
-import time # 2. 保持引入 time 模組
+import datetime
+import time
 import pytz
 import os
 from urllib.error import URLError
@@ -15,23 +15,20 @@ CONFIG = {
     "request_delay_seconds": 2
 }
 
-def get_today_start_time(tz_str):
-    """以指定時區的中午12點為一天的開始"""
+def get_current_checking_window_utc(tz_str):
+    """獲取香港時間當天午夜0點到午夜前的時間範圍，並轉換為UTC"""
     target_tz = pytz.timezone(tz_str)
     now_tz = datetime.datetime.now(target_tz)
-    # 3. 使用 datetime.time 來明確指定
-    noon_time = datetime.time(12, 0)
     
-    if now_tz.time() >= noon_time:
-        start_of_day = now_tz.replace(hour=12, minute=0, second=0, microsecond=0)
-    else:
-        yesterday = now_tz - datetime.timedelta(days=1)
-        start_of_day = yesterday.replace(hour=12, minute=0, second=0, microsecond=0)
-        
-    return start_of_day
+    start_of_window = now_tz.replace(hour=0, minute=0, second=0, microsecond=0)
+    end_of_window = now_tz.replace(hour=23, minute=59, second=59, microsecond=999999)
+    
+    start_utc = start_of_window.astimezone(pytz.utc)
+    end_utc = end_of_window.astimezone(pytz.utc)
+    
+    return start_utc, end_utc
 
 def load_json(file_path, default_data):
-    """讀取 JSON 檔案，如果不存在或格式錯誤則返回預設值"""
     if not os.path.exists(file_path):
         return default_data
     try:
@@ -40,17 +37,20 @@ def load_json(file_path, default_data):
     except (json.JSONDecodeError, FileNotFoundError):
         return default_data
 
-def check_channel(channel, today_start_time_utc, last_video_published_utc):
-    """檢查單一頻道，返回新影片數量和最新的影片時間"""
+# 1. 簡化函式，不再需要 last_seen_time_utc 參數
+def check_channel(channel, start_time_utc, end_time_utc):
+    """
+    檢查單一頻道。
+    返回: (在時間窗口內的新影片數, Feed中最新的影片時間)
+    """
     channel_id = channel['channel_id']
     channel_name = channel['name']
     rss_url = f"https://www.youtube.com/feeds/videos.xml?channel_id={channel_id}"
     
-    print(f"正在檢查頻道: {channel_name} (ID: {channel_id})")
+    print(f"正在檢查頻道: {channel_name}")
     
     try:
         feed = feedparser.parse(rss_url)
-        
         if feed.bozo:
             raise feed.bozo_exception
 
@@ -58,66 +58,64 @@ def check_channel(channel, today_start_time_utc, last_video_published_utc):
         latest_entry_time_utc = None
 
         for entry in feed.entries:
-            # 3. 使用 datetime.datetime 來明確指定
             published_time = datetime.datetime(*entry.published_parsed[:6], tzinfo=pytz.utc)
             
+            # 記錄 Feed 中最新的影片時間，用於更新 last_check.json
             if latest_entry_time_utc is None or published_time > latest_entry_time_utc:
                 latest_entry_time_utc = published_time
 
-            if published_time > today_start_time_utc and published_time > last_video_published_utc:
+            # 2. 這是新的、簡化的核心判斷邏輯
+            if start_time_utc <= published_time <= end_time_utc:
                 new_video_count += 1
         
-        print(f"  -> 成功: 發現 {new_video_count} 個新影片。")
+        print(f"  -> 成功: 在時間範圍內發現 {new_video_count} 個影片。")
         return new_video_count, latest_entry_time_utc
 
-    except URLError as e:
-        print(f"  -> 錯誤: 網路連線問題或無效的 URL。 {e.reason}")
-        return 0, None
-    except Exception as e:
-        print(f"  -> 錯誤: 無法解析 {channel_name} 的 RSS feed。可能是無效的 Channel ID 或 YouTube 暫時問題。詳細資訊: {e}")
+    except (URLError, Exception) as e:
+        print(f"  -> 錯誤: 處理頻道 {channel_name} 時發生問題。詳細資訊: {e}")
         return 0, None
 
 def main():
     """主執行函式"""
     channels = load_json(CONFIG["channels_file"], [])
-    state = load_json(CONFIG["state_file"], {"videos": {}})
     
-    today_start_time_hk = get_today_start_time(CONFIG["timezone"])
-    today_start_time_utc = today_start_time_hk.astimezone(pytz.utc)
+    start_time_utc, end_time_utc = get_current_checking_window_utc(CONFIG["timezone"])
+    
+    print(f"檢查時間範圍 (UTC): {start_time_utc.strftime('%Y-%m-%d %H:%M:%S')} 至 {end_time_utc.strftime('%Y-%m-%d %H:%M:%S')}")
 
     output_status = []
-    new_state_videos = state.get("videos", {})
+    # 3. 準備一個字典來收集最新的影片時間，以便最後寫入 last_check.json
+    new_state_videos = {}
 
     for i, channel in enumerate(channels):
         channel_id = channel['channel_id']
         
-        last_video_published_str = state.get("videos", {}).get(channel_id)
-        # 3. 使用 datetime.datetime 和 datetime.datetime.min
-        last_video_published_utc = datetime.datetime.fromisoformat(last_video_published_str).replace(tzinfo=pytz.utc) if last_video_published_str else datetime.datetime.min.replace(tzinfo=pytz.utc)
-
-        new_video_count, latest_entry_time_utc = check_channel(channel, today_start_time_utc, last_video_published_utc)
-
+        # 1. 呼叫簡化後的函式
+        new_video_count, latest_entry_time_utc = check_channel(channel, start_time_utc, end_time_utc)
+        
         output_status.append({
             "channel_name": channel['name'],
-            # 3. 使用 datetime.datetime
             "retrieved_time": datetime.datetime.now(pytz.utc).isoformat(),
             "new_video_count": new_video_count
         })
-
+        
+        # 3. 收集每個頻道的最新影片時間
         if latest_entry_time_utc:
             new_state_videos[channel_id] = latest_entry_time_utc.isoformat()
         
         if i < len(channels) - 1:
             delay = CONFIG["request_delay_seconds"]
-            print(f"  ...延遲 {delay} 秒，避免請求過於頻繁...")
-            # 這裡的 time.sleep() 現在可以正確工作了
+            print(f"  ...延遲 {delay} 秒...")
             time.sleep(delay)
 
+    # 寫入 status.json (計數結果)
     with open(CONFIG["output_file"], 'w', encoding='utf-8') as f:
         json.dump(output_status, f, indent=2, ensure_ascii=False)
 
+    # 寫入 last_check.json (純粹的記錄)
+    final_state = {"videos": new_state_videos}
     with open(CONFIG["state_file"], 'w', encoding='utf-8') as f:
-        json.dump({"videos": new_state_videos}, f, indent=2)
+        json.dump(final_state, f, indent=2)
 
     print("所有頻道檢查完成。")
 
