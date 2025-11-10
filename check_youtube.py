@@ -5,6 +5,7 @@ import time
 import pytz
 import os
 from urllib.error import URLError
+import random
 
 # --- 專業的設定區 ---
 CONFIG = {
@@ -12,7 +13,9 @@ CONFIG = {
     "state_file": 'last_check.json',
     "output_file": 'status.json',
     "timezone": 'Asia/Hong_Kong',
-    "request_delay_seconds": 2
+    #"request_delay_seconds": 2 
+    "min_delay_seconds": 2,
+    "max_delay_seconds": 4
 }
 
 def get_current_checking_window_utc(tz_str):
@@ -37,7 +40,6 @@ def load_json(file_path, default_data):
     except (json.JSONDecodeError, FileNotFoundError):
         return default_data
 
-# 1. 簡化函式，不再需要 last_seen_time_utc 參數
 def check_channel(channel, start_time_utc, end_time_utc):
     """
     檢查單一頻道。
@@ -104,8 +106,11 @@ def main():
             new_state_videos[channel_id] = latest_entry_time_utc.isoformat()
         
         if i < len(channels) - 1:
-            delay = CONFIG["request_delay_seconds"]
-            print(f"  ...延遲 {delay} 秒...")
+            #delay = CONFIG["request_delay_seconds"]
+            # 從設定的範圍內生成一個隨機的浮點數
+            delay = random.uniform(CONFIG["min_delay_seconds"], CONFIG["max_delay_seconds"])
+            # 打印出實際的延遲時間，方便調試
+            print(f"  ...隨機延遲 {delay:.2f} 秒...")
             time.sleep(delay)
 
     # 寫入 status.json (計數結果)
