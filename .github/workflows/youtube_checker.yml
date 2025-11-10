@@ -8,6 +8,16 @@ on:
 jobs:
   check-updates:
     runs-on: ubuntu-latest
+    
+    # ------ 需add以下兩行 ------
+    # 否則出 403 Forbidden, GitHub Actions預設只授予"read" repo權限。 但git-auto-commit-action 這工具需"寫入"權限，
+    # 才能將新的 status.json 推送回來。 below is 403 Forbidden錯誤:
+    # remote: Permission to xxx/youtube-new-vid-rss-checker.git denied to github-actions[bot].
+    # fatal: unable to access 'https://github.com/xxx/youtube-new-vid-rss-checker/': The requested URL returned error: 403
+    permissions:
+      contents: write
+    # ---------------------------
+    
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
