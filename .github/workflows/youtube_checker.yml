@@ -2,7 +2,7 @@ name: Check YouTube Channel Updates
 
 on:
   schedule:
-    - cron: '*/20 * * * *'
+    - cron: '*/35 * * * *'
   workflow_dispatch:
 
 jobs:
