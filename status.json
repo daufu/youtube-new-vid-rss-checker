@@ -1,57 +1,57 @@
 [
   {
     "channel_name": "a_ma",
-    "retrieved_time": "2026-01-02T11:09:23.538415+00:00",
+    "retrieved_time": "2026-01-02T11:40:21.204867+00:00",
     "new_video_count": 1
   },
   {
     "channel_name": "haha_travel",
-    "retrieved_time": "2026-01-02T11:09:26.869589+00:00",
+    "retrieved_time": "2026-01-02T11:40:24.212750+00:00",
     "new_video_count": 1
   },
   {
     "channel_name": "Laos_SiuChan",
-    "retrieved_time": "2026-01-02T11:09:29.721480+00:00",
-    "new_video_count": 0
+    "retrieved_time": "2026-01-02T11:40:26.846350+00:00",
+    "new_video_count": 2
   },
   {
     "channel_name": "Laos_10years",
-    "retrieved_time": "2026-01-02T11:09:32.974678+00:00",
+    "retrieved_time": "2026-01-02T11:40:30.428383+00:00",
     "new_video_count": 1
   },
   {
     "channel_name": "datouxiaotou",
-    "retrieved_time": "2026-01-02T11:09:35.425735+00:00",
+    "retrieved_time": "2026-01-02T11:40:33.304429+00:00",
     "new_video_count": 0
   },
   {
     "channel_name": "cnyifanma",
-    "retrieved_time": "2026-01-02T11:09:39.022798+00:00",
+    "retrieved_time": "2026-01-02T11:40:36.569479+00:00",
     "new_video_count": 1
   },
   {
     "channel_name": "liuweiyuan",
-    "retrieved_time": "2026-01-02T11:09:41.828938+00:00",
+    "retrieved_time": "2026-01-02T11:40:40.599125+00:00",
     "new_video_count": 1
   },
   {
     "channel_name": "zhuoyueqiongyouji",
-    "retrieved_time": "2026-01-02T11:09:45.794415+00:00",
+    "retrieved_time": "2026-01-02T11:40:44.411496+00:00",
     "new_video_count": 1
   },
   {
     "channel_name": "NaJieandYuGuo",
-    "retrieved_time": "2026-01-02T11:09:48.725396+00:00",
+    "retrieved_time": "2026-01-02T11:40:47.149481+00:00",
     "new_video_count": 0
   },
   {
     "channel_name": "ALianYiJiaZaiNongCun",
-    "retrieved_time": "2026-01-02T11:09:52.469169+00:00",
+    "retrieved_time": "2026-01-02T11:40:49.572764+00:00",
     "new_video_count": 1
   },
   {
     "channel_name": "drunkardlee",
-    "retrieved_time": "2026-01-02T11:09:56.268460+00:00",
+    "retrieved_time": "2026-01-02T11:40:51.822284+00:00",
     "new_video_count": 0
   }
 ]
