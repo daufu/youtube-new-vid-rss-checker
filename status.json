@@ -1,57 +1,57 @@
 [
   {
     "channel_name": "a_ma",
-    "retrieved_time": "2026-07-29T07:34:45.192645+00:00",
-    "new_video_count": 0
-  },
-  {
-    "channel_name": "haha_travel",
-    "retrieved_time": "2026-07-29T07:34:48.027204+00:00",
+    "retrieved_time": "2026-07-29T10:13:04.524849+00:00",
     "new_video_count": 1
   },
   {
+    "channel_name": "haha_travel",
+    "retrieved_time": "2026-07-29T10:13:08.401340+00:00",
+    "new_video_count": 2
+  },
+  {
     "channel_name": "Laos_SiuChan",
-    "retrieved_time": "2026-07-29T07:34:51.584354+00:00",
+    "retrieved_time": "2026-07-29T10:13:10.913036+00:00",
     "new_video_count": 0
   },
   {
     "channel_name": "Laos_10years",
-    "retrieved_time": "2026-07-29T07:34:54.879515+00:00",
+    "retrieved_time": "2026-07-29T10:13:14.857238+00:00",
     "new_video_count": 1
   },
   {
     "channel_name": "datouxiaotou",
-    "retrieved_time": "2026-07-29T07:34:58.326641+00:00",
+    "retrieved_time": "2026-07-29T10:13:18.320698+00:00",
     "new_video_count": 0
   },
   {
     "channel_name": "cnyifanma",
-    "retrieved_time": "2026-07-29T07:35:02.238921+00:00",
+    "retrieved_time": "2026-07-29T10:13:21.085868+00:00",
     "new_video_count": 1
   },
   {
     "channel_name": "liuweiyuan",
-    "retrieved_time": "2026-07-29T07:35:05.905957+00:00",
+    "retrieved_time": "2026-07-29T10:13:24.246274+00:00",
     "new_video_count": 1
   },
   {
     "channel_name": "zhuoyueqiongyouji",
-    "retrieved_time": "2026-07-29T07:35:08.575266+00:00",
+    "retrieved_time": "2026-07-29T10:13:26.409453+00:00",
     "new_video_count": 0
   },
   {
     "channel_name": "NaJieandYuGuo",
-    "retrieved_time": "2026-07-29T07:35:12.431826+00:00",
+    "retrieved_time": "2026-07-29T10:13:29.387915+00:00",
     "new_video_count": 0
   },
   {
     "channel_name": "ALianYiJiaZaiNongCun",
-    "retrieved_time": "2026-07-29T07:35:16.354307+00:00",
+    "retrieved_time": "2026-07-29T10:13:33.514576+00:00",
     "new_video_count": 0
   },
   {
     "channel_name": "drunkardlee",
-    "retrieved_time": "2026-07-29T07:35:20.416166+00:00",
+    "retrieved_time": "2026-07-29T10:13:37.128630+00:00",
     "new_video_count": 0
   }
 ]
